@@ -22,7 +22,12 @@ var aqiData = [
   ["广州", 50],
   ["成都", 90],
   ["武汉", 85],
-  ["西安", 100]
+  ["西安", 100],
+  ["广西", 55],
+  ["杭州", 95],
+  ["厦门", 95],
+  ["大同", 65],
+  ["云南", 45]
 ];
 
 (function () {
@@ -32,28 +37,46 @@ var aqiData = [
   遍历读取aqiData中各个城市的数据
   将空气质量指数大于60的城市显示到aqi-list的列表中
   */
-  var date = [],
-      temp = [],
+  var date = [],  //存放符合要求的数组
+      temp = [],  
       j = 0;
-  for(var i = 0;i < aqiData.length; i++){
-      if(aqiData[i][aqiData[i].length-1] >= 60){
-        date.push([]);
-        date[j][0] = aqiData[i][0];
-        date[j][1] = aqiData[i][1]; 
-        j++;
+  var aqi_list = document.getElementById("aqi-list");
+
+  var arry = {         //用于得到符合要求的数组
+    dateSelect: function(){   //过滤出符合条件的数组
+      for(var i = 0;i < aqiData.length; i++){
+        if(aqiData[i][aqiData[i].length-1] >= 60){
+          date.push([]);
+          date[j][0] = aqiData[i][0];
+          date[j][1] = aqiData[i][1]; 
+          j++;
+        }
+      }
+    },
+    dateList: function(){   //排序数组
+      for(var k = 0; k < date.length-1; k++){
+        for(var m = 0; m < date.length-1; m++){
+          if(parseInt(date[m][1]) <= parseInt(date[m+1][1])){
+            temp = date[m];
+            date[m] = date[m+1];
+            date[m+1] = temp;
+          }
+        }
       }
     }
-  console.log(date);
-  for(var k = 0; k < date.length; k++){
-    for(var m = k; m < date.length-1; m++){
-      if(date[m][1]>=date[m+1][1]){
-        temp = date[m];
-        date[m] = date[m+1];
-        date[m+1] = temp;
-      }
+  };
+  
+  var dateDisplay = function(){    //显示数据
+    for (var n = 0; n < date.length; n++){
+      var li = document.createElement("li");
+      li.innerHTML = "第" + n + "名: " + date[n][0] + " , " + date[n][1];
+      aqi_list.appendChild(li);
     }
   }
-  console.log(date);
+  
+  arry.dateSelect();   //过滤
+  arry.dateList();     //排序
+  dateDisplay();       //显示
 
 })();
 
