@@ -1,0 +1,142 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>IFE JavaScript Task 01</title>
+  </head>
+<body>
+
+  <ul id="source">
+    <li>北京空气质量：<b>90</b></li>
+    <li>上海空气质量：<b>70</b></li>
+    <li>天津空气质量：<b>80</b></li>
+    <li>广州空气质量：<b>50</b></li>
+    <li>深圳空气质量：<b>40</b></li>
+    <li>福州空气质量：<b>32</b></li>
+    <li>成都空气质量：<b>90</b></li>
+  </ul>
+
+  <ul id="resort">
+    <!-- 
+    <li>第一名：北京空气质量：<b>90</b></li>
+    <li>第二名：北京空气质量：<b>90</b></li>
+    <li>第三名：北京空气质量：<b>90</b></li>
+     -->
+
+  </ul>
+
+  <button id="sort-btn">排序</button>
+
+<script type="text/javascript">
+
+/**
+ * getData方法
+ * 读取id为source的列表，获取其中城市名字及城市对应的空气质量
+ * 返回一个数组，格式见函数中示例
+ */
+
+ var data = [],
+    resort = document.getElementById("resort"),
+    sort_btn = document.getElementById("sort-btn");
+
+ var EventUtil = {           //跨浏览器事件处理程序
+    addHandler:function(element, type, handler){    //添加事件
+      if(element.addEventListener){       //DOM2级事件处理
+        element.addEventListener(type, handler, false);//false冒泡阶段调用
+      }else if(element.attachEvent){     //兼容IE8或更早的版本
+        element.attachEvent("on" + type, handler);
+      }else{                            //DOM0级事件处理
+        element["on" + type] = handler;
+      }
+    },
+    removeHandler:function(element, type, handler){
+      if (element.removeEventListener){
+        element.removeEventListenr(type, handler, false);
+      } else if (element.detachEvent){
+        element.detachEvent("on" + type, handler);
+      } else {
+        element["on" + type] = null;
+      }
+    }
+  };
+
+function getData() {
+  /*
+  coding here
+  */
+
+  /*
+  data = [
+    ["北京", 90],
+    ["北京", 90]
+    ……
+  ]
+  */
+  var count = 0,
+      source = document.getElementById("source"),
+      li = source.getElementsByTagName("li"),
+      b = source.getElementsByTagName("b");
+  for (var i = 0; i < li.length; i++){
+    data.push([]);
+    data[count][0] = li[i].innerHTML.substr(0,2);
+    data[count][1] = parseInt(b[i].innerHTML);
+    count++;
+  }
+
+  return data;
+
+}
+
+/**
+ * sortAqiData
+ * 按空气质量对data进行从小到大的排序
+ * 返回一个排序后的数组
+ */
+function sortAqiData(data) {
+
+  var temp = [];
+  for (var j = 0; j < data.length - 1; j++){
+    for (var m = 0; m < data.length - 1; m++){
+      if (data[m][1] < data[m+1][1]){
+        temp = data[m];
+        data[m] = data[m+1];
+        data[m+1] = temp;
+      }
+    }
+  }
+  return data;
+
+}
+
+/**
+ * render
+ * 将排好序的城市及空气质量指数，输出显示到id位resort的列表中
+ * 格式见ul中的注释的部分
+ */
+function render(data) {
+  for (var n = 0; n < data.length; n++){
+    var li = document.createElement("li");
+    li.innerHTML = "<li>" + "第" + (n + 1) + "名: " + data[n][0] + "空气质量：" + "<b>" + data[n][1] + "</b>" + "</li>";
+    resort.appendChild(li);
+  }
+}
+
+function btnHandle() {
+  var aqiData = getData();
+  aqiData = sortAqiData(aqiData);
+  render(aqiData);
+  sort_btn.disabled = true;  //排序一次后不能再点击
+}
+
+function init() {
+
+  // 在这下面给sort-btn绑定一个点击事件，点击时触发btnHandle函数
+  EventUtil.addHandler(sort_btn,"click",btnHandle);
+
+}
+
+init();
+
+</script>
+</body>
+</html>

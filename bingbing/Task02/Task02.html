@@ -69,7 +69,7 @@ var aqiData = [
   var dateDisplay = function(){    //显示数据
     for (var n = 0; n < date.length; n++){
       var li = document.createElement("li");
-      li.innerHTML = "第" + n + "名: " + date[n][0] + " , " + date[n][1];
+      li.innerHTML = "第" + (n + 1) + "名: " + date[n][0] + " , " + date[n][1];
       aqi_list.appendChild(li);
     }
   }
