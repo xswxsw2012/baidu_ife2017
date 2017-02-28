@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>模拟一个队列</title>
+	<style type="text/css">
+		li{
+			display: inline-block;
+			width: 30px;
+			/*height: 30px;*/
+			line-height: 30px;
+			text-align: center;
+			list-style-type: none;
+			border: 1px solid #eee;
+			background-color: yellow;
+		}
+	</style>
+</head>
+<body>
+	<input type="" name="" id="input-data">
+	<button id="left-in">左侧入</button>
+	<button id="right-in">右侧入</button>
+	<button id="left-out">左侧出</button>
+	<button id="right-out">右侧出</button>
+	<button id="order">排序</button>
+	<ul id="number"></ul>
+<script type="text/javascript">
+	var input_data = document.getElementById("input-data"),
+		left_in = document.getElementById("left-in"),
+		right_in = document.getElementById("right-in"),
+		left_out = document.getElementById("left-out"),
+		right_out = document.getElementById("right-out"),
+		order = document.getElementById("order"),
+		ul = document.getElementById("number"),
+		count = 0;                   //记li标签的个数
+
+	var Display = {                 //事件操作句柄函数
+		leftIn: function(){
+			var li = document.createElement("li");
+			li.style.height = input_data.value + "px";
+			ul.insertBefore(li,ul.childNodes[0]);
+
+		},
+		rightIn: function(){
+			var li = document.createElement("li");
+			li.style.height = input_data.value + "px";
+			ul.appendChild(li);
+		},
+		leftOut: function(){
+			ul.removeChild(ul.childNodes[0]);
+		},
+		rightOut: function(){
+			ul.lastChild.remove();
+		},
+		check: function(){
+			if(!(input_data.value >= 10 && input_data.value <= 100)){
+				alert("请输入10-100之间的数值");
+				return;
+			}
+			count++;
+			if(count >= 60){
+				alert("列队元素已经大于等于60个了");
+			}
+		},
+		orderLi: function(){
+			var data = [],
+				temp,
+				List = document.getElementsByTagName("li");
+			for(var i =0; i < List.length; i++){        //在data中存入li标签的高度值
+				data.push(parseInt(List[i].style.height.split("px")[0]));
+			}
+			for(var j = 0; j < data.length - 1; j++){   //对li的高度值排序
+				for(var m = j + 1; m < data.length; m++){
+					if(data[j] > data[m]){
+						temp = data[j];
+						data[j] = data[m];
+						data[m] = temp;
+					}
+				}
+			}
+			ul.innerHTML = "";
+			for(var k = 0; k < data.length; k++){     //显示排序后的结果
+				var li = document.createElement("li");
+				li.style.height = data[k] + "px";
+				ul.appendChild(li);
+			}
+		}
+	};
+
+
+	var EventUtil = {           //跨浏览器事件处理程序
+    addHandler:function(element, type, handler){    //添加事件
+      if(element.addEventListener){       //DOM2级事件处理
+        element.addEventListener(type, handler, false);//false冒泡阶段调用
+      }else if(element.attachEvent){     //兼容IE8或更早的版本
+        element.attachEvent("on" + type, handler);
+      }else{                            //DOM0级事件处理
+        element["on" + type] = handler;
+      }
+    },
+    removeHandler:function(element, type, handler){
+      if (element.removeEventListener){
+        element.removeEventListenr(type, handler, false);
+      } else if (element.detachEvent){
+        element.detachEvent("on" + type, handler);
+      } else {
+        element["on" + type] = null;
+      }
+    }
+  };
+
+  EventUtil.addHandler(input_data,"blur",Display.check);	//检测输入值合法性
+  EventUtil.addHandler(left_in,"click",Display.leftIn);     //注册左侧入事件
+  EventUtil.addHandler(right_in,"click",Display.rightIn);   //注册右侧入事件
+  EventUtil.addHandler(left_out,"click",Display.leftOut);   //注册左侧出事件
+  EventUtil.addHandler(right_out,"click",Display.rightOut); //注册右侧出事件
+  EventUtil.addHandler(order,"click",Display.orderLi);      //注册排序事件
+
+</script>
+</body>
+</html>
