@@ -14,6 +14,7 @@
     <li>深圳空气质量：<b>40</b></li>
     <li>福州空气质量：<b>32</b></li>
     <li>成都空气质量：<b>90</b></li>
+    <li>乌鲁木齐空气质量：<b>75</b></li>
   </ul>
 
   <ul id="resort">
@@ -78,7 +79,7 @@ function getData() {
       b = source.getElementsByTagName("b");
   for (var i = 0; i < li.length; i++){
     data.push([]);
-    data[count][0] = li[i].innerHTML.substr(0,2);
+    data[count][0] = li[i].innerHTML.split("空气质量")[0];
     data[count][1] = parseInt(b[i].innerHTML);
     count++;
   }
