@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
 	<title>模拟一个队列</title>
 	<style type="text/css">
 		li{
@@ -8,6 +9,7 @@
 			width: 30px;
 			height: 30px;
 			line-height: 30px;
+			margin-left: 3px;
 			text-align: center;
 			list-style-type: none;
 			border: 1px solid #eee;
@@ -35,11 +37,13 @@
 		leftIn: function(){
 			var li = document.createElement("li");
 			li.innerHTML = input_data.value;
+			input_data.value = "";
 			ul.insertBefore(li,ul.childNodes[0]);
 		},
 		rightIn: function(){
 			var li = document.createElement("li");
 			li.innerHTML = input_data.value;
+			input_data.value = "";
 			ul.appendChild(li);
 		},
 		leftOut: function(){
