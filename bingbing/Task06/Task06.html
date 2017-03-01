@@ -71,15 +71,11 @@
 			data.pop();
 		},
 		selectData: function(){
-			var results = [],       //存放索引值
-				pos = 0;            //索引位置
-			while(pos < data.length){             //检索出匹配项的索引值，存入数组
-				pos = data.indexOf(check.value,pos); //要检索的字符串和检索位置
-				if(pos === -1){
-					break;
+			var results = [];      //存放索引值
+			for(var i = 0; i < data.length; i++){      //检索出符合要求的项
+				if(data[i].indexOf(check.value) !== -1){
+					results.push(i);
 				}
-				results.push(pos);    //找到存储索引
-				pos += 1;             //从下一个位置继续检索
 			}
 			ul.innerHTML = "";       //清空ul下的内容
 			for(var k = 0; k < data.length; k++){       //检索后重新显示ul内容
