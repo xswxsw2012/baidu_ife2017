@@ -6,6 +6,7 @@
 	<style type="text/css">
 		input{
 			outline: none;
+			border: 1px solid #000;
 		}
 		span,input,button{
 			margin-left: 15px;
@@ -20,8 +21,10 @@
 	</style>
 </head>
 <body>
+  <!-- <form action=""> -->
 	<div class="fig"><span>名称</span><input type="" name="" id="txt"><button id="result">验证</button></div>
 	<div id="show">必填，长度为4~16个字符</div>
+  <!-- </form> -->
 <script type="text/javascript">
   var txt = document.getElementById("txt"),
 	  show = document.getElementById("show"),
@@ -53,7 +56,7 @@
 		show.innerHTML = "名称格式正确";
 		show.style.color = "#97ffff";
 		txt.style.borderColor = "#97ffff";
-	}else if(txt.value === ""){
+	}else if(getByteLen(txt.value) === 0){
 		show.innerHTML = "姓名不能为空";
 		show.style.color = "red";
 		txt.style.borderColor = "red";
