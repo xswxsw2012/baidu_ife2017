@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>单个表单项的检验</title>
+	<style type="text/css">
+		input{
+			outline: none;
+		}
+		span,input,button{
+			margin-left: 15px;
+		}
+		#show{
+			margin-left: 15px;
+			margin-top: 5px;
+		}
+		.fig{
+			margin-top: 30px;
+		}
+	</style>
+</head>
+<body>
+	<div class="fig"><span>名称</span><input type="" name="" id="txt"><button id="result">验证</button></div>
+	<div id="show">必填，长度为4~16个字符</div>
+<script type="text/javascript">
+  var txt = document.getElementById("txt"),
+	  show = document.getElementById("show"),
+	  result = document.getElementById("result");
+
+  var EventUtil = {           //跨浏览器事件处理程序
+    addHandler:function(element, type, handler){    //添加事件
+      if(element.addEventListener){       //DOM2级事件处理
+        element.addEventListener(type, handler, false);//false冒泡阶段调用
+      }else if(element.attachEvent){     //兼容IE8或更早的版本
+        element.attachEvent("on" + type, handler);
+      }else{                            //DOM0级事件处理
+        element["on" + type] = handler;
+      }
+    },
+    removeHandler:function(element, type, handler){
+      if (element.removeEventListener){
+        element.removeEventListenr(type, handler, false);
+      } else if (element.detachEvent){
+        element.detachEvent("on" + type, handler);
+      } else {
+        element["on" + type] = null;
+      }
+    }
+  };
+
+  var check = function(){
+  	if(getByteLen(txt.value) >= 4 && getByteLen(txt.value) <= 16){
+		show.innerHTML = "名称格式正确";
+		show.style.color = "#97ffff";
+		txt.style.borderColor = "#97ffff";
+	}else if(txt.value === ""){
+		show.innerHTML = "姓名不能为空";
+		show.style.color = "red";
+		txt.style.borderColor = "red";
+	}else{
+		show.style.color = "red";
+		txt.style.borderColor = "red";
+	}
+  };
+
+  function getByteLen(val){    //计算字符个数函数
+  	var len = 0;
+  	for(var i = 0; i < val.length; i++){
+  		var a = val.charAt(i);
+  		if(a.match(/[^\x00-\xff]/ig) != null){
+  			len += 2;
+  		}else{
+  			len += 1;
+  		}
+  	}
+  	return len;
+  }
+
+  EventUtil.addHandler(result,"click",check);   //注册验证事件
+	
+</script>
+</body>
+</html>
