@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>模拟一个队列</title>
+	<style type="text/css">
+		li{
+			display: inline-block;
+			width: 30px;
+			height: 30px;
+			line-height: 30px;
+			margin-left: 3px;
+			text-align: center;
+			list-style-type: none;
+			border: 1px solid #eee;
+			background-color: yellow;
+		}
+	</style>
+</head>
+<body>
+	<textarea type="" name="" id="input-data"></textarea>
+	<button id="left-in">左侧入</button>
+	<button id="right-in">右侧入</button>
+	<button id="left-out">左侧出</button>
+	<button id="right-out">右侧出</button>
+	<input type="" name="" id="check">
+	<button id="select">查询</button>
+	<ul id="number"></ul>
+<script type="text/javascript">
+	var input_data = document.getElementById("input-data"),
+		left_in = document.getElementById("left-in"),
+		right_in = document.getElementById("right-in"),
+		left_out = document.getElementById("left-out"),
+		right_out = document.getElementById("right-out"),
+		ul = document.getElementById("number"),
+		select = document.getElementById("select"),
+		check = document.getElementById("check"),
+		txt = [],
+		data = [];
+
+	var Display = {                 //事件操作句柄函数
+
+		leftIn: function(){
+			txt = input_data.value.replace(/[^0-9a-zA-z\u4e00-\u9fa5]/g," ").split(" ");
+			input_data.value = "";
+			for(var i = 0; i < txt.length; i++){
+				var li = document.createElement("li");
+				li.innerHTML = txt[i];
+				ul.insertBefore(li,ul.childNodes[0]);
+				data.unshift(txt[i]);     //存储数据
+			}
+			txt.splice(0,txt.length);     //清空数组
+		},
+		rightIn: function(){
+			txt = input_data.value.replace(/[^0-9a-zA-z\u4e00-\u9fa5]/g," ").split(" ");
+			input_data.value = "";
+			for(var i = 0; i < txt.length; i++){
+				var li = document.createElement("li");
+				li.innerHTML = txt[i];
+				ul.appendChild(li);
+				data.push(txt[i]);
+			}
+			txt.splice(0,txt.length);
+		},
+		leftOut: function(){
+			ul.removeChild(ul.childNodes[0]);
+			data.shift();
+		},
+		rightOut: function(){
+			ul.lastChild.remove();
+			data.pop();
+		},
+		selectData: function(){
+			var results = [],       //存放索引值
+				pos = 0;            //索引位置
+			while(pos < data.length){             //检索出匹配项的索引值，存入数组
+				pos = data.indexOf(check.value,pos); //要检索的字符串和检索位置
+				if(pos === -1){
+					break;
+				}
+				results.push(pos);    //找到存储索引
+				pos += 1;             //从下一个位置继续检索
+			}
+			ul.innerHTML = "";       //清空ul下的内容
+			for(var k = 0; k < data.length; k++){       //检索后重新显示ul内容
+				var li = document.createElement("li");
+				li.innerHTML = data[k];
+				if(results.indexOf(k) >= 0){
+					li.style.color = "red";
+				}
+				ul.appendChild(li);
+			}
+		}
+	};
+
+	var EventUtil = {           //跨浏览器事件处理程序
+    addHandler:function(element, type, handler){    //添加事件
+      if(element.addEventListener){       //DOM2级事件处理
+        element.addEventListener(type, handler, false);//false冒泡阶段调用
+      }else if(element.attachEvent){     //兼容IE8或更早的版本
+        element.attachEvent("on" + type, handler);
+      }else{                            //DOM0级事件处理
+        element["on" + type] = handler;
+      }
+    },
+    removeHandler:function(element, type, handler){
+      if (element.removeEventListener){
+        element.removeEventListenr(type, handler, false);
+      } else if (element.detachEvent){
+        element.detachEvent("on" + type, handler);
+      } else {
+        element["on" + type] = null;
+      }
+    }
+  };
+
+  EventUtil.addHandler(left_in,"click",Display.leftIn);     //注册左侧入事件
+  EventUtil.addHandler(right_in,"click",Display.rightIn);   //注册右侧入事件
+  EventUtil.addHandler(left_out,"click",Display.leftOut);   //注册左侧出事件
+  EventUtil.addHandler(right_out,"click",Display.rightOut); //注册右侧出事件
+  EventUtil.addHandler(select,"click",Display.selectData);  //注册查询事件
+
+</script>
+</body>
+</html>
