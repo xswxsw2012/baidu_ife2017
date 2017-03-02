@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>多个表单项动态校检</title>
+	<style type="text/css">
+		input{
+			outline: none;
+			border: 1px solid #000;
+		}
+		span,input,button{
+			margin-left: 15px;
+		}
+		.show{
+			margin-left: 15px;
+			margin-top: 5px;
+		}
+		.fig{
+			margin-top: 30px;
+		}
+	</style>
+</head>
+<body>
+  <form action="" id="formInput">
+  	<div class="fig"><span>名称</span><input type="text" name="finput" id="nameTxt" ></div>
+  	<div class="show" id="name"></div>
+    <div class="fig"><span>密码</span><input type="text" name="finput" id="secretTxt" ></div>
+    <div class="show" id="secret"></div>
+    <div class="fig"><span>密码确认</span><input type="text" name="finput" id="resecTxt" ></div>
+    <div class="show" id="resec"></div>
+    <div class="fig"><span>邮箱</span><input type="text" name="finput" id="mailTxt" ></div>
+    <div class="show" id="mail"></div>
+    <div class="fig"><span>手机</span><input type="text" name="finput" id="phoneTxt" ></div>
+    <div class="show" id="phone"></div>
+    <button id="result" type="button">提交</button>
+  </form>
+<script type="text/javascript">
+  var formInput = document.getElementById("formInput"),
+      inputList = formInput.elements("finput");
+      // txt = document.getElementById("txt"),
+	  // show = document.getElementById("show"),
+	    result = document.getElementById("result");
+
+  var EventUtil = {           //跨浏览器事件处理程序
+    addHandler:function(element, type, handler){    //添加事件
+      if(element.addEventListener){       //DOM2级事件处理
+        element.addEventListener(type, handler, false);//false冒泡阶段调用
+      }else if(element.attachEvent){     //兼容IE8或更早的版本
+        element.attachEvent("on" + type, handler);
+      }else{                            //DOM0级事件处理
+        element["on" + type] = handler;
+      }
+    },
+    removeHandler:function(element, type, handler){
+      if (element.removeEventListener){
+        element.removeEventListenr(type, handler, false);
+      } else if (element.detachEvent){
+        element.detachEvent("on" + type, handler);
+      } else {
+        element["on" + type] = null;
+      }
+    }
+  };
+
+  var Focus ={
+    getFocus: function(id){      //得到焦点
+      switch(id)
+      {
+        case name:
+          name.innerHTML = "必填，长度为4~16个字符";
+          break;
+        case secret:
+          secret.innerHTML = "必填，六位数密码";
+          break;
+        case resec:
+          secret.innerHTML = "必填，验证六位数密码";
+          break;
+        case mail:
+          secret.innerHTML = "必填，正确邮箱格式";
+          break;
+        case phone:
+          secret.innerHTML = "必填，11位手机号码";
+          break;
+        default:
+          break;
+      }
+    },
+  getFocus: function(id){      //失去焦点
+      switch(id)
+      {
+        case name:
+          checkFocus.nameCheck();
+          break;
+        case secret:
+          checkFocus.secretCheck();
+          break;
+        case resec:
+          checkFocus.resecCheck();
+          break;
+        case mail:
+          checkFocus.mailCheck();
+          break;
+        case phone:
+          checkFocus.phoneCheck();
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+  var checkFocus = {
+    nameCheck: function(){
+      if(getByteLen(nameTxt.value) >= 4 && getByteLen(nameTxt.value) <= 16){
+        name.innerHTML = "名称格式正确";
+        name.style.color = "#97ffff";
+        nameTxt.style.borderColor = "#97ffff";
+      }else if(getByteLen(nameTxt.value) === 0){
+        name.innerHTML = "姓名不能为空";
+        name.style.color = "red";
+        nameTxt.style.borderColor = "red";
+      }else{
+        name.style.color = "red";
+        nameTxt.style.borderColor = "red";
+      }
+    },
+    secretCheck: function(){
+      if(getByteLen(secretTxt.value) === 6){
+        secret.innerHTML = "密码设置正确";
+        secret.style.color = "#97ffff";
+        secretTxt.style.borderColor = "#97ffff";
+      }else{
+        secret.style.color = "red";
+        secretTxt.style.borderColor = "red";
+      }
+    },
+    resecCheck: function(){
+      if(resecTxt.value === secretTxt){
+        resec.innerHTML = "密码验证正确";
+        resec.style.color = "#97ffff";
+        resecTxt.style.borderColor = "#97ffff";
+      }else{
+        resec.style.color = "red";
+        resecTxt.style.borderColor = "red";
+      }
+    },
+    mailCheck: function(){
+      var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+      if(myreg.test(mailTxt.value)){
+        mail.innerHTML = "密码验证正确";
+        mail.style.color = "#97ffff";
+        mailTxt.style.borderColor = "#97ffff";
+      }else{
+        mail.style.color = "red";
+        mailTxt.style.borderColor = "red";
+      }
+    },
+    phoneCheck: function(){
+      if(getByteLen(phoneTxt.value) === 11){
+        phone.innerHTML = "密码验证正确";
+        phone.style.color = "#97ffff";
+        phoneTxt.style.borderColor = "#97ffff";
+      }else{
+        phone.style.color = "red";
+        phoneTxt.style.borderColor = "red";
+      }
+    }
+  };
+
+  function getByteLen(val){    //计算字符个数函数
+  	var len = 0;
+  	for(var i = 0; i < val.length; i++){
+  		var a = val.charAt(i);
+  		if(a.match(/[^\x00-\xff]/ig) != null){
+  			len += 2;
+  		}else{
+  			len += 1;
+  		}
+  	}
+  	return len;
+  }
+
+  EventUtil.addHandler(this.id,"click",);   //注册聚焦事件
+	
+</script>
+</body>
+</html>
