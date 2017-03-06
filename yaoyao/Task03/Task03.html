@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>表单联动</title>
+	<style type="text/css">
+		#no_student{
+			display: none;
+		}
+		#job{
+			width: 200px;
+			margin: 0 auto;
+			margin-top: 50px;
+		}
+		#worker{
+			width: 250px;
+			margin: 0 auto;
+			margin-top: 20px;
+		}
+	</style>
+</head>
+<body>
+	<form>
+		<div id="job">
+			<input type="radio" name="people" checked="checked">
+			<span id="study">在校生</span>
+			<input type="radio" name="people">
+			<span>非在校生</span>
+		</div>
+		<div id="worker">
+			<div id="student">
+				<span>学校</span>
+				<select name="address"></select>
+				<select name="college"></select>
+			</div>
+			<div id="no_student">
+				<span>就业单位</span>
+				<input type="" name="">
+			</div>
+		</div>
+	</form>
+</body>
+<script type="text/javascript">
+	var data = [{"city":"北京","school":["北京大学","清华大学","北京邮电大学","北京航空航天大学","北京理工大学","北京师范大学"]},
+				{"city":"重庆","school":["重庆大学","西南大学","重庆邮电大学","重庆理工大学","重庆工商大学","四川美术学院"]},
+				{"city":"武汉","school":["武汉大学","华中科技大学","武汉理工大学","华中师范大学","武汉科技大学","武汉纺织大学","江汉大学"]},
+				{"city":"四川","school":["四川大学","西南交通大学","成都理工大学","西华大学"]}];
+
+	var address = document.forms[0].elements["address"],
+		college = document.forms[0].elements["college"],
+		people = document.forms[0].elements["people"],
+		study = document.getElementById("study"),
+		job = document.getElementById("job");
+		no_student = document.getElementById("no_student");
+		
+	var EventUtil = {           //跨浏览器事件处理程序
+			addHandler:function(element, type, handler){    //添加事件
+			  if(element.addEventListener){       //DOM2级事件处理
+			    element.addEventListener(type, handler, false);//false冒泡阶段调用
+			  }else if(element.attachEvent){     //兼容IE8或更早的版本
+			    element.attachEvent("on" + type, handler);
+			  }else{                            //DOM0级事件处理
+			    element["on" + type] = handler;
+			  }
+			},
+			removeHandler:function(element, type, handler){
+			  if (element.removeEventListener){
+			    element.removeEventListenr(type, handler, false);
+			  } else if (element.detachEvent){
+			    element.detachEvent("on" + type, handler);
+			  } else {
+			    element["on" + type] = null;
+			  }
+			}
+		};
+
+	var Change = {          //点击改变显示内容函数
+		find_study:function(){
+			if(people[0].checked){
+				student.style.display = "block";
+				no_student.style.display = "none";
+			}else{
+				no_student.style.display = "block";
+				student.style.display = "none";
+			}
+		},
+		find_city:function(event){
+			for(var k = 0; k < data.length; k++){  //通过option的text确定选择的项
+				if(data[k].city == event.target.value){
+					college.innerHTML = "";
+					for(var m = 0; m < data[k].school.length; m++){
+						var new_school = document.createElement("option");
+							new_school.text = data[k].school[m];
+							college.appendChild(new_school);
+					}
+				}
+			}		
+		}
+	};
+
+	addData = function(){     //开始添加一次数据
+		for(var i = 0; i < data.length; i++){         //添加城市信息
+			var option_city = document.createElement("option");
+			option_city.text = data[i].city;
+			option_city.setAttribute("name",i);  //添加garde属性标记
+			address.appendChild(option_city);
+		}
+		for(var j = 0; j < data[0].school.length; j++){ //添加学校信息
+			var option_school = document.createElement("option");
+			option_school.text = data[0].school[j];
+			college.appendChild(option_school);
+		}
+	}
+
+	addData();             //开始做一次部分数据加载
+	EventUtil.addHandler(job,"change",Change.find_study); //注册选择在校生和非在校生（事件代理）
+	EventUtil.addHandler(address,"change",Change.find_city); //注册选择不同城市
+</script>
+</html>
