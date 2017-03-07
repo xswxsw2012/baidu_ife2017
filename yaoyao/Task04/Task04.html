@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>听指令的小方块（一）</title>
+	<style type="text/css">
+		#frame{
+			position: relative;
+		}
+		table{
+			border-collapse: collapse;
+		}
+		#top_table{
+			position: absolute;
+			left: 40px;
+		}
+		#top_table th{
+			width: 30px;
+			height: 30px;
+			border: 1px solid #000;
+		}
+		#left_table{
+			position: absolute;
+			top: 40px;
+		}
+		#left_table th{
+			width: 30px;
+			height: 30px;
+			border: 1px solid #000;
+		}
+		#right_table{
+			position: absolute;
+			top: 40px;
+			left: 40px;
+			border: 2px solid #000;
+		}
+		#right_table th{
+			width: 30px;
+			height: 30px;
+			border: 1px solid #eee;
+		}
+		#move_order{
+			position: absolute;
+			top: 380px;
+		}
+	</style>
+</head>
+<body>
+	<div id="frame">
+		<table id="top_table">
+			<tr>
+				<th>1</th>
+				<th>2</th>
+				<th>3</th>
+				<th>4</th>
+				<th>5</th>
+				<th>6</th>
+				<th>7</th>
+				<th>8</th>
+				<th>9</th>
+				<th>10</th>
+			</tr>
+		</table>
+		<table id="left_table">
+			<tr>
+				<th>1</th>
+			</tr>
+			<tr>
+				<th>2</th>
+			</tr>
+			<tr>
+				<th>3</th>
+			</tr>
+			<tr>
+				<th>4</th>
+			</tr>
+			<tr>
+				<th>5</th>
+			</tr>
+			<tr>
+				<th>6</th>
+			</tr>
+			<tr>
+				<th>7</th>
+			</tr>
+			<tr>
+				<th>8</th>
+			</tr>
+			<tr>
+				<th>9</th>
+			</tr>
+			<tr>
+				<th>10</th>
+			</tr>
+		</table>
+		<table id="right_table"></table>
+		<div id="move_order">
+			<input type="" name="" id="sport">
+			<input type="button" id="execute" value="执行">
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		var right_table = document.getElementById("right_table"),
+			top_table = document.getElementById("top_table"),
+			left_table = document.getElementById("left_table"),
+			left_th = left_table.getElementsByTagName("th"),
+			top_th = top_table.getElementsByTagName("th"),
+			sport = document.getElementById("sport"),
+			execute = document.getElementById("execute"),
+			data = [Math.floor(Math.random()*10),Math.floor(Math.random()*10)];  //保存当前坐标
+			console.log(sport.value);
+
+		  var EventUtil = {           //跨浏览器事件处理程序
+		    addHandler:function(element, type, handler){    //添加事件
+		      if(element.addEventListener){       //DOM2级事件处理
+		        element.addEventListener(type, handler, false);//false冒泡阶段调用
+		      }else if(element.attachEvent){     //兼容IE8或更早的版本
+		        element.attachEvent("on" + type, handler);
+		      }else{                            //DOM0级事件处理
+		        element["on" + type] = handler;
+		      }
+		    },
+		    removeHandler:function(element, type, handler){
+		      if (element.removeEventListener){
+		        element.removeEventListenr(type, handler, false);
+		      } else if (element.detachEvent){
+		        element.detachEvent("on" + type, handler);
+		      } else {
+		        element["on" + type] = null;
+		      }
+		    }
+		  };
+
+		function addtd(){            //添加内容区表格
+			for (var i = 0; i < left_th.length; i++) {
+				var tr = document.createElement("tr");
+				for(var j = 0; j < top_th.length; j++){
+					var th = document.createElement("th");
+					tr.appendChild(th);
+				}
+				right_table.appendChild(tr);
+			}
+		}
+
+		function addaim(){
+			var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+				select_th = select_tr.getElementsByTagName("th")[data[1]];
+				select_th.style.backgroundImage = 'linear-gradient(180deg,blue,blue 10px,red 10px)'; //添加背景颜色
+		}
+
+		
+		var move = function(run){
+			console.log(sport.value);
+			switch(run)
+			{
+				case "GO":
+					var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+						select_th = select_tr.getElementsByTagName("th")[data[1]];
+						select_th.style.backgroundImage = '';
+
+					var select_mo = right_table.getElementsByTagName("tr")[data[0]],
+						select_ve = select_tr.getElementsByTagName("th")[data[1]];
+						select_th.style.backgroundImage = 'linear-gradient(180deg,blue,blue 10px,red 10px)'; 
+					break;
+
+			}
+		};
+		var moveone = function(){
+			console.log(sport.value);
+		};
+
+		addtd();
+		addaim();
+		EventUtil.addHandler(execute,"click",moveone);
+
+	</script>
+</body>
+</html>
