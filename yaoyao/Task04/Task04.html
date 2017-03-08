@@ -109,7 +109,6 @@
 			sport = document.getElementById("sport"),
 			execute = document.getElementById("execute"),
 			data = [Math.floor(Math.random()*10),Math.floor(Math.random()*10)];  //保存当前坐标
-			console.log(sport.value);
 
 		  var EventUtil = {           //跨浏览器事件处理程序
 		    addHandler:function(element, type, handler){    //添加事件
@@ -143,36 +142,142 @@
 			}
 		}
 
-		function addaim(){
+		function addaim(){         //初始化方块
 			var select_tr = right_table.getElementsByTagName("tr")[data[0]],
 				select_th = select_tr.getElementsByTagName("th")[data[1]];
-				select_th.style.backgroundImage = 'linear-gradient(180deg,blue,blue 10px,red 10px)'; //添加背景颜色
+				select_th.style.backgroundImage = 'linear-gradient(90deg,blue,blue 10px,red 10px)'; //添加背景颜色
 		}
-
 		
-		var move = function(run){
-			console.log(sport.value);
+		var move = function(){            //方块运动主函数
+			var run = sport.value,
+				sure_tr = right_table.getElementsByTagName("tr")[data[0]],
+				sure_th = sure_tr.getElementsByTagName("th")[data[1]],
+				sure_direct = sure_th.style.backgroundImage;
 			switch(run)
 			{
-				case "GO":
-					var select_tr = right_table.getElementsByTagName("tr")[data[0]],
-						select_th = select_tr.getElementsByTagName("th")[data[1]];
-						select_th.style.backgroundImage = '';
+				case "GO":	
+					if(sure_direct.indexOf("90deg") == 16){  //向左
+						if(data[1] == 0){
+							alert("请转换方向");
+							break;
+						}
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = '';
 
-					var select_mo = right_table.getElementsByTagName("tr")[data[0]],
-						select_ve = select_tr.getElementsByTagName("th")[data[1]];
-						select_th.style.backgroundImage = 'linear-gradient(180deg,blue,blue 10px,red 10px)'; 
+						var select_mo = right_table.getElementsByTagName("tr")[data[0]],
+							select_ve = select_mo.getElementsByTagName("th")[data[1] - 1];
+							select_ve.style.backgroundImage = 'linear-gradient(90deg,blue,blue 10px,red 10px)';
+							data = [data[0],data[1] - 1];
+					}else if(sure_direct.indexOf("270deg") == 16){//向右
+						if(data[1] == 9){
+							alert("请转换方向");
+							break;
+						}
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = '';
+
+						var select_mo = right_table.getElementsByTagName("tr")[data[0]],
+							select_ve = select_mo.getElementsByTagName("th")[data[1] + 1];
+							select_ve.style.backgroundImage = 'linear-gradient(270deg,blue,blue 10px,red 10px)';
+							data = [data[0],data[1] + 1]; 
+					}else if(sure_direct.indexOf("0deg") == 16){  //向下
+						if(data[0] == 9){
+							alert("请转换方向");
+							break;
+						}
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = '';
+
+						var select_mo = right_table.getElementsByTagName("tr")[data[0] + 1],
+							select_ve = select_mo.getElementsByTagName("th")[data[1]];
+							select_ve.style.backgroundImage = 'linear-gradient(0deg,blue,blue 10px,red 10px)';
+							data = [data[0] + 1,data[1]]; 
+					}else{                                      //向上
+						if(data[0] == 0){
+							alert("请转换方向");
+							break;
+						}
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = '';
+
+						var select_mo = right_table.getElementsByTagName("tr")[data[0] - 1],
+							select_ve = select_mo.getElementsByTagName("th")[data[1]];
+							select_ve.style.backgroundImage = 'linear-gradient(180deg,blue,blue 10px,red 10px)'; 
+							data = [data[0]-1,data[1]];
+					}
+					break; 
+				case "TUN LEF":   //向左转
+					if(sure_direct.indexOf("90deg") == 16){ //左转下
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = 'linear-gradient(0deg,blue,blue 10px,red 10px)';
+					}else if(sure_direct.indexOf("270deg") == 16){  //右转上
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = 'linear-gradient(180deg,blue,blue 10px,red 10px)';
+					}else if(sure_direct.indexOf("0deg") == 16){  //下转右
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = 'linear-gradient(270deg,blue,blue 10px,red 10px)';
+					}else{    //上转左 
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = 'linear-gradient(90deg,blue,blue 10px,red 10px)';
+					}
+					break;
+				case "TUN RIG":  //向右转
+					if(sure_direct.indexOf("90deg") == 16){ //左转上
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = 'linear-gradient(180deg,blue,blue 10px,red 10px)';
+					}else if(sure_direct.indexOf("270deg") == 16){  //右转下
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = 'linear-gradient(0deg,blue,blue 10px,red 10px)';
+					}else if(sure_direct.indexOf("0deg") == 16){  //下转左
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = 'linear-gradient(90deg,blue,blue 10px,red 10px)';
+						
+					}else{    //上转右 
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = 'linear-gradient(270deg,blue,blue 10px,red 10px)';
+					}
+					break;
+				case "TUN BAC":  //向右转（旋转180度）
+					if(sure_direct.indexOf("90deg") == 16){ //左转右
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = 'linear-gradient(270deg,blue,blue 10px,red 10px)';
+					}else if(sure_direct.indexOf("270deg") == 16){  //右转左
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = 'linear-gradient(90deg,blue,blue 10px,red 10px)';
+					}else if(sure_direct.indexOf("0deg") == 16){  //下转上
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = 'linear-gradient(180deg,blue,blue 10px,red 10px)';
+						
+					}else{    //上转下 
+						var select_tr = right_table.getElementsByTagName("tr")[data[0]],
+							select_th = select_tr.getElementsByTagName("th")[data[1]];
+							select_th.style.backgroundImage = 'linear-gradient(0deg,blue,blue 10px,red 10px)';
+					}
+					break;
+				default:
 					break;
 
 			}
 		};
-		var moveone = function(){
-			console.log(sport.value);
-		};
 
-		addtd();
-		addaim();
-		EventUtil.addHandler(execute,"click",moveone);
+		addtd();                                     //添加主内容区
+		addaim();                                    //初始化方块
+		EventUtil.addHandler(execute,"click",move);  //注册运动函数
 
 	</script>
 </body>
